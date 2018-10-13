@@ -1,5 +1,6 @@
 // Action types
 export const ADD_ARTISTS_TYPE = 'ADD_ARTISTS'
+export const SET_AS_FAVORITE_TYPE = 'SET_AS_FAVORITE'
 
 // Initial state
 const initialState = {
@@ -13,7 +14,16 @@ const artistsReducer = (state = initialState, action = {}) => {
     case ADD_ARTISTS_TYPE:
       return {
         ...state,
-        artistas: action.payload.artists,
+        artistas: action.payload.artistas,
+      }
+
+    case SET_AS_FAVORITE_TYPE:
+      return {
+        ...state,
+        favoritos: {
+          ...state.favoritos,
+          [action.payload.id]: !state.favoritos[action.payload.id],
+        },
       }
 
     default:

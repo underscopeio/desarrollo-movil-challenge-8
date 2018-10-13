@@ -1,38 +1,18 @@
 import React from 'react'
 import { Button, StyleSheet, Text, View, ScrollView } from 'react-native'
-import { filter, has } from 'lodash'
-
 import { authorize, logout, getUserArtistsPromise } from '../spotify-api-client'
 import ArtistaFavorito from '../ArtistaFavorito'
 
 import { connect } from 'react-redux'
-import { SET_AS_FAVORITE_TYPE, ADD_ARTISTS_TYPE } from '../reducers/artists'
+import { SET_AS_FAVORITE_TYPE } from '../reducers/artists'
 
-class HomeScreen extends React.Component {
-  state = {
-    result: null,
-  }
-
-  componentDidMount() {
-    getUserArtistsPromise().then(artistas => {
-      this.props.loadArtists(artistas)
-      // this.setState({ artistas })
-    })
-  }
-
-  _handleLogoutButtonPress = () => {
-    logout().then(() => {
-      this.props.navigation.navigate('Auth')
-    })
-  }
-
+class FavoritesScreen extends React.Component {
   handleFavoriteButtonPress = artist => {
     this.props.setArtistAsFavorite(artist.nombre)
   }
 
   render() {
-    const { artistas, artistasQueTieneUnaU } = this.props
-    const { loggedIn } = this.state
+    const { artistas } = this.props
 
     return (
       <View style={styles.container}>
@@ -41,7 +21,6 @@ class HomeScreen extends React.Component {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewContent}
         >
-          <Text>{artistasQueTieneUnaU}</Text>
           {artistas &&
             artistas.map(artist => (
               <ArtistaFavorito
@@ -52,9 +31,6 @@ class HomeScreen extends React.Component {
               />
             ))}
         </ScrollView>
-        <View style={styles.buttonsContainer}>
-          <Button title="Logout" onPress={this._handleLogoutButtonPress} />
-        </View>
       </View>
     )
   }
@@ -93,18 +69,16 @@ const mapStateToProps = state => {
   return {
     favoritos: state.artists.favoritos,
     artistas: state.artists.artistas,
-    artistasQueTieneUnaU: filter(state.artists.artistas, artist => artist.nombre === 'Jorja Smith').length,
   }
 }
 
 const mapDispatchToProps = dispatch => {
   return {
     setArtistAsFavorite: id => dispatch({ type: SET_AS_FAVORITE_TYPE, payload: { id } }),
-    loadArtists: artistas => dispatch({ type: ADD_ARTISTS_TYPE, payload: { artistas } }),
   }
 }
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(HomeScreen)
+)(FavoritesScreen)

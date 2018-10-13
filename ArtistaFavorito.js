@@ -3,14 +3,11 @@ import PropTypes from 'prop-types'
 import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native'
 
 export default class ArtistaFavorito extends React.Component {
-  handleStarButtonPress = () => {
-    // TODO: acá se debería hacer un `dispatch` del action que marque el artista como favorito
-  }
-
   render() {
     const {
       artista: { nombre, imagen },
       esFavorito,
+      onFavoriteButtonPress,
     } = this.props
 
     return (
@@ -18,7 +15,7 @@ export default class ArtistaFavorito extends React.Component {
         <Image source={{ uri: imagen }} style={styles.imagen} />
         <View style={styles.dataContainer}>
           <Text style={styles.nombre}>{nombre}</Text>
-          <TouchableOpacity onPress={this.handleStarButtonPress}>
+          <TouchableOpacity onPress={onFavoriteButtonPress}>
             <Text style={[styles.starButton, esFavorito && styles.favorito]}>🌟</Text>
           </TouchableOpacity>
         </View>
