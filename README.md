@@ -35,3 +35,7 @@ Para poder resolver este challenge seguir los siguientes pasos
     > TIP: podés modificar el objeto de artista que ya tenés en el store ;) 
 1. Emitir esa acción al tocar el botón de favorito de cada artista
 
+#### Bonus
+
+1. Preguntar a el/la profe _¿Y por qué no guardo esa información directamente en el `state` del componente?_
+1. Pedir que haga un ejemplo más real mostrando otro tab que comparta información con el ya existente
