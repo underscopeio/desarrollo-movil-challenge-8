@@ -1,11 +1,10 @@
-import { keyBy } from 'lodash'
-
 // Action types
 export const ADD_ARTISTS_TYPE = 'ADD_ARTISTS'
 
 // Initial state
 const initialState = {
-  artists: {},
+  artistas: [],
+  favoritos: {}, // objeto que tiene como key el nombre del artista y como valor si es favorito o no
 }
 
 //  Reducer
@@ -14,7 +13,7 @@ const artistsReducer = (state = initialState, action = {}) => {
     case ADD_ARTISTS_TYPE:
       return {
         ...state,
-        artists: keyBy(action.payload.artists, 'nombre'),
+        artistas: action.payload.artists,
       }
 
     default:
