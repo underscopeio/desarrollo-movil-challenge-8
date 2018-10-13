@@ -1,15 +1,27 @@
 import React from 'react'
 import { Button, StyleSheet, Text, View, ScrollView } from 'react-native'
-import { authorize, logout, getUserArtistsPromise } from '../spotify-api-client'
+import { logout, getUserArtistsPromise } from '../spotify-api-client'
 import ArtistaFavorito from '../ArtistaFavorito'
+import { connect } from 'react-redux'
+import { ADD_ARTISTS_TYPE, SET_ARTIST_AS_FAVORITE } from './../reducers/artists'
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   state = {
     result: null,
   }
 
+  _handleClickSetFavorite = id => {
+    this.props.dispatch({ type: SET_ARTIST_AS_FAVORITE, payload: { artistId: id } })
+  }
+
+  _getArtists = () => {
+    getUserArtistsPromise().then(artistas => {
+      this.props.dispatch({ type: ADD_ARTISTS_TYPE, payload: { artistas } })
+    })
+  }
+
   componentDidMount() {
-    getUserArtistsPromise().then(artistas => this.setState({ artistas }))
+    this._getArtists()
   }
 
   _handleLogoutButtonPress = () => {
@@ -19,7 +31,7 @@ export default class HomeScreen extends React.Component {
   }
 
   render() {
-    const { loggedIn, artistas } = this.state
+    const { artistas, favoritos } = this.props
 
     return (
       <View style={styles.container}>
@@ -28,7 +40,15 @@ export default class HomeScreen extends React.Component {
           style={styles.scrollView}
           contentContainerStyle={styles.scrollViewContent}
         >
-          {artistas && artistas.map(artist => <ArtistaFavorito artista={artist} key={artist.nombre} />)}
+          {artistas &&
+            artistas.map(artist => (
+              <ArtistaFavorito
+                artista={artist}
+                key={artist.nombre}
+                handleClickFavorite={() => this._handleClickSetFavorite(artist.nombre)}
+                esFavorito={favoritos[artist.nombre]}
+              />
+            ))}
         </ScrollView>
         <View style={styles.buttonsContainer}>
           <Button title="Logout" onPress={this._handleLogoutButtonPress} />
@@ -37,6 +57,15 @@ export default class HomeScreen extends React.Component {
     )
   }
 }
+
+const mapStateToProps = state => {
+  return {
+    artistas: state.artists.artistas,
+    favoritos: state.artists.favoritos,
+  }
+}
+
+export default connect(mapStateToProps)(HomeScreen)
 
 const styles = StyleSheet.create({
   container: {
