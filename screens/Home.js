@@ -1,9 +1,10 @@
 import React from 'react'
 import { Button, StyleSheet, Text, View, ScrollView } from 'react-native'
-import { authorize, logout, getUserArtistsPromise } from '../spotify-api-client'
+import { logout, getUserArtistsPromise } from '../spotify-api-client'
 import ArtistaFavorito from '../ArtistaFavorito'
+import { connect } from 'react-redux'
 
-export default class HomeScreen extends React.Component {
+class HomeScreen extends React.Component {
   state = {
     result: null,
   }
@@ -37,6 +38,8 @@ export default class HomeScreen extends React.Component {
     )
   }
 }
+
+export default connect()(HomeScreen)
 
 const styles = StyleSheet.create({
   container: {
